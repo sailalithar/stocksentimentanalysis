@@ -24,19 +24,19 @@ def getTrainX(rawData):
     volumeData = np.array(rawData['Volume'], dtype=np.dtype(float))
     
     # get RSI6
-    rsi6 = tb.RSI(closeData, 6)
+    rsi6 = tb.RSI(adjCloseData, 6)
     
     # get RSI12
-    rsi12 = tb.RSI(closeData, 12)
+    rsi12 = tb.RSI(adjCloseData, 12)
     
     # get SMA3
     sma3 = 
     
     # get EMA6
-    ema6 = tb.EMA(closeData, 6)
+    ema6 = tb.EMA(adjCloseData, 6)
     
     # get EMA12
-    ema12 = tb.EMA(closeData, 6)
+    ema12 = tb.EMA(adjCloseData, 6)
     
     # get ATR14
     atr14 = tb.ATR(highData, lowData, closeData, 14)
@@ -51,10 +51,10 @@ def getTrainX(rawData):
     adx20 = tb.ADX(highData, lowData, closeData, 20)
     
     # get MOM1
-    mom1 = tb.MOM(closeData, 1)
+    mom1 = tb.MOM(adjCloseData, 1)
     
     # get MOM3
-    mom3 = tb.MOM(closeData, 3)
+    mom3 = tb.MOM(adjCloseData, 3)
     
     # get CCI12
     cci12 = tb.CCI(highData, lowData, closeData, 12)
@@ -63,34 +63,28 @@ def getTrainX(rawData):
     cci20 = tb.CCI(highData, lowData, closeData, 20)
     
     # get ROCR3
-    rocr3 = tb.ROCR100(closeData, 3)
+    rocr3 = tb.ROCR100(adjCloseData, 3)
     
     # get ROCR12
-    rocr12 = tb.ROCR100(closeData, 12)
+    rocr12 = tb.ROCR100(adjCloseData, 12)
     
-    # get outMACD
-    outMACD = 
-    
-    # get outMACDSignal
-    outMACDSignal = 
-    
-    #get outMACDHist
-    outMACDHist = 
+    # get outMACD, outMACDSignal, outMACDHist
+    outMACD, outMACDSignal, outMACDHist = talib.MACD(adjCloseData,fastperiod=12,slowperiod=26,signalperiod=9)
     
     # get WILLR
     willr = tb.WILLR(highData,lowData,closeData)
     
     # get TSF10
-    tsf10 = tb.TSF(closeData, 10)
+    tsf10 = tb.TSF(adjCloseData, 10)
     
     # get TSF20
-    tsf20 = tb.TSF(closeData, 20)
+    tsf20 = tb.TSF(adjCloseData, 20)
     
     # get TRIX, default to 12 days
-    trix = tb.TRIX(closeData, 12)
+    trix = tb.TRIX(adjCloseData, 12)
     
     # get BBANDSUPPER, BBANDSMIDDLE, BBANDSLOWER
-    bupper, bmiddle, blower = tb.BBANDS(closeData, 10, 2, 2, 0)
+    bupper, bmiddle, blower = tb.BBANDS(adjCloseData, 10, 2, 2, 0)
     
     #Return Train matrix
     return np.column_stack((adjCloseData, OBV, volumeData, rsi6, rsi12, sma3, ema6, ema12, atr14, mfi14, adx14, adx20, mom1, mom3, cci12, cci20, rocr3, rocr12, outMACD, outMACDSignal, willR, tsf10, tsf20, trix, bupper, bmiddle, blower))
