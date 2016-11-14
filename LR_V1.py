@@ -102,11 +102,13 @@ def Logistic_reg(X,y):
 #     model = LogisticRegression().fit(X, y)
 #     print model.score(X, y)
 #==============================================================================
-    # evaluate the model by splitting into train and test sets    
-    X_train = X[:100,:]
-    X_test = X[101:,:]
-    y_train = y[:100]
-    y_test = y[101:]
+    # evaluate the model by splitting into train and test sets 
+    train = int(X.shape[0] * 0.8)
+    test = train + 1
+    X_train = X[:train,:]
+    X_test = X[test:,:]
+    y_train = y[:train]
+    y_test = y[test:]
     model2 = LogisticRegression()
     model2.fit(X_train, y_train)
     # predict class labels for the training set
@@ -135,8 +137,8 @@ def Logistic_reg(X,y):
     
 if __name__ == "__main__": 
     stocks = ['AAPL']
-    start = datetime.date(2015,11,1)
-    end = datetime.date(2016,6,30)
+    start = datetime.date(2015,10,1)
+    end = datetime.date(2016,7,15)
     rawData = web.DataReader(stocks, 'yahoo',start, end)
     rawData = rawData.to_frame()
 
@@ -155,7 +157,7 @@ if __name__ == "__main__":
     Y = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
     #Y=Y+[1,1,1]
     
-    X_new = X_new[:125,:]    
+    X_new = X_new[:-3,:]    
     
     #get Logistic regression    
     model2,y_test = Logistic_reg(X_new,Y)
