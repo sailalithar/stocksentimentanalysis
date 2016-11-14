@@ -1,0 +1,5 @@
+I am adding two files generatedata and svm
+generate data is making the x and y matrix with normalization
+need to look into the y matrix it has only 1 class
+
+run the code using svm
