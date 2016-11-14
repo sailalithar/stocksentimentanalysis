@@ -28,7 +28,8 @@ def getTrainX(rawData):
     adjCloseData = np.array(rawData['Adj Close'], dtype=np.dtype(float))
     
     # OBV
-    OBV = tb.OBV(adjCloseData,volumeData)
+    obv = tb.OBV(adjCloseData,volumeData)
+    obv = np.array(NormalizeX(obv), dtype=np.dtype(float))
     
     # get VolumeData
     volumeData = np.array(rawData['Volume'], dtype=np.dtype(float))
@@ -41,6 +42,7 @@ def getTrainX(rawData):
     
     # get SMA3
     sma3 = tb.SMA(adjCloseData,3)
+    sma3 = np.array(NormalizeX(sma3), dtype=np.dtype(float))
     
     # get EMA6
     ema6 = tb.EMA(adjCloseData, 6)
@@ -83,7 +85,8 @@ def getTrainX(rawData):
     
     # get WILLR
     willr = tb.WILLR(highData,lowData,closeData)
-    
+    willr = np.array(NormalizeX(willr), dtype=np.dtype(float))
+        
     # get TSF10
     tsf10 = tb.TSF(adjCloseData, 10)
     
@@ -97,7 +100,7 @@ def getTrainX(rawData):
     bupper, bmiddle, blower = tb.BBANDS(adjCloseData, 10, 2, 2, 0)
     
     #Return Train matrix
-    return np.column_stack((adjCloseData, OBV, volumeData, rsi6, rsi12, sma3, ema6, ema12, atr14, mfi14, adx14, adx20, mom1, mom3, cci12, cci20, rocr3, rocr12, outMACD, outMACDSignal, willR, tsf10, tsf20, trix, bupper, bmiddle, blower))
+    return np.column_stack((adjCloseData, obv, volumeData, rsi6, rsi12, sma3, ema6, ema12, atr14, mfi14, adx14, adx20, mom1, mom3, cci12, cci20, rocr3, rocr12, outMACD, outMACDSignal, willR, tsf10, tsf20, trix, bupper, bmiddle, blower))
 
 
  
