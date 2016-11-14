@@ -7,6 +7,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
+
+
+
+def NormalizeX(feature):
+  nanFeature =  [0 if math.isnan(x) else x for x in range(len(feature))]
+  fMean = np.mean(nanFeature)
+  normalFeature = [((fMean-x)/fMean) for x in range(len(nanFeature))]
+  return normalFeature
+
+
 def getTrainX(rawData):
     # get rawdata in form of matrix
     highData = np.array(rawData['High'], dtype=np.dtype(float))
@@ -18,7 +28,7 @@ def getTrainX(rawData):
     adjCloseData = np.array(rawData['Adj Close'], dtype=np.dtype(float))
     
     # OBV
-    OBV = 
+    OBV = tb.OBV(adjCloseData,volumeData)
     
     # get VolumeData
     volumeData = np.array(rawData['Volume'], dtype=np.dtype(float))
@@ -30,7 +40,7 @@ def getTrainX(rawData):
     rsi12 = tb.RSI(adjCloseData, 12)
     
     # get SMA3
-    sma3 = 
+    sma3 = tb.SMA(adjCloseData,3)
     
     # get EMA6
     ema6 = tb.EMA(adjCloseData, 6)
