@@ -182,13 +182,13 @@ def Logistic_reg(X,y):
     predicted_test = model2.predict(X_test)
     
     # generate evaluation metrics
-    print "Accuracy for training set using Logistic regression"
+    #print "Accuracy for training set using Logistic regression"
     acc_train = metrics.accuracy_score(y_train, predicted_train)
-    print acc_train
+    #print acc_train
 
-    print "Accuracy for test set using Logistic regression"
+    #print "Accuracy for test set using Logistic regression"
     acc_test = metrics.accuracy_score(y_test, predicted_test)
-    print acc_test
+    #print acc_test
 
     #validation for model
     return model2, y_test, acc_train, acc_test
@@ -202,9 +202,10 @@ def feat_select(X,y):
     return model.feature_importances_    
 
 def evaluate(stocks, start, end):
-    
+    finalList = []
+    finalListSnP = []
     for stock in stocks:
-        
+
         rawData = web.DataReader([stock], 'yahoo',start, end)
 
         rawData = rawData.to_frame()
@@ -237,12 +238,13 @@ def evaluate(stocks, start, end):
         YSnP = [1 if (sma3SnP[x] - sma3SnP[x+3])<0 else -1 for x in range(0,len(sma3SnP)-3)]
         
         X_new = X_new[:-3,:]    
-        Y = Y + YSnP
         
         #scores = feat_select(X_new,Y)    
         #get Logistic regression    
-        model2,y_test, train_acc, test_acc = Logistic_reg(X_new,Y)
+        model2,y_test, train_acc, test_acc = Logistic_reg(X_new[:, :28],Y)
     
+        model2SnP, y_testSnP, train_accSnP, test_accSnP = Logistic_reg(X_new[:, 28:],YSnP)
+        
         finalList.append(
                         {
                             'stock': stock,
@@ -252,12 +254,21 @@ def evaluate(stocks, start, end):
                         }
                     )
 
-        return finalList        
+        finalListSnP.append(
+                        {
+                            'stockSnP': stock,
+                            'modelSnP': model2SnP,
+                            'train_accSnP': train_accSnP,
+                            'test_accSnP': test_accSnP
+                        }
+                    )
+                    
+    return finalList, finalListSnP        
     
 if __name__ == "__main__":
     
     #Stock List
-    stocks = ['FB']
+    stocks = ['FB', 'AAPL', 'MSFT', 'IBM']
     
     #Start and end Time
     start = datetime.date(2015,11,1)
@@ -265,4 +276,8 @@ if __name__ == "__main__":
     
 #    rawData2 = (web.DataReader(['^IXIC'], 'yahoo',start, end)).to_frame()    
 
-    finalList = evaluate(stocks, start, end)
+    finalList, finalListSnP = evaluate(stocks, start, end)
+    
+    print finalList
+    print "\n"
+    print finalListSnP
