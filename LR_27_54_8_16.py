@@ -285,7 +285,7 @@ def evaluate(stocks, start, end):
             X_new_27 = X_27[39:,:]
             X_new_54 = X_54[39:,:]
    
-			#Build Y matrix
+		#Build Y matrix
             sma3 = X_new_27[:,21]
             Y_27 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
             
@@ -307,38 +307,38 @@ def evaluate(stocks, start, end):
             model_16, y_test_16, train_acc_16, test_acc_16 = Logistic_reg(X_select_16,Y_54)
 			
             finalList_27.append(
-							{
-								'stock': stock,
-								'model': model_27,
-								'train_acc': train_acc_27,
-								'test_acc': test_acc_27
-							}
-						)
+					{
+						'stock': stock,
+						'model': model_27,
+						'train_acc': train_acc_27,
+						'test_acc': test_acc_27
+					}
+				)
             finalList_54.append(
-							{
-								'stock': stock,
-								'model': model_54,
-								'train_acc': train_acc_54,
-								'test_acc': test_acc_54
-							}
-						)
+					{
+						'stock': stock,
+						'model': model_54,
+						'train_acc': train_acc_54,
+						'test_acc': test_acc_54
+					}
+				)
       
             finalList_select_8.append(
-							{
-								'stock': stock,
-								'model': model_8,
-								'train_acc': train_acc_8,
-								'test_acc': test_acc_8
-							}
-						)
-            finalList_select_16.append(
-							{
-								'stock': stock,
-								'model': model_16,
-								'train_acc': train_acc_16,
-								'test_acc': test_acc_16
-							}
-						)
+					{
+						'stock': stock,
+						'model': model_8,
+						'train_acc': train_acc_8,
+						'test_acc': test_acc_8
+					}
+				)
+	    finalList_select_16.append(
+						{
+							'stock': stock,
+							'model': model_16,
+							'train_acc': train_acc_16,
+							'test_acc': test_acc_16
+						}
+					)
         print stockCat
         getBarPlot(stockCat, finalList_27, col, 27)
         getBarPlot(stockCat, finalList_54, col, 54)
