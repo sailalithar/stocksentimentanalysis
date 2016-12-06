@@ -13,7 +13,7 @@ from sklearn.cross_validation import cross_val_score
 import math
 from sklearn import svm
 from sklearn.svm import SVC
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import TimeSeriesSplit
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 #import matplotlib.pylab as plt
@@ -166,44 +166,10 @@ def getX(rawData, rawDataSnP):
     #Return Training dataframe
     return df
 
-#Implement Logistic Regression
-def Logistic_reg(X,y):
-#==============================================================================
-#     model = LogisticRegression().fit(X, y)
-#     print model.score(X, y)
-#==============================================================================
-    # evaluate the model by splitting into train and test sets 
-    train = int(X.shape[0] * 0.8)
-    test = train + 1
-    X_train = X[:train,:]
-    X_test = X[test:,:]
-    y_train = y[:train]
-    y_test = y[test:]
-    model2 = LogisticRegression()
-    model2.fit(X_train, y_train)
-    
-    # predict class labels for the training set
-    predicted_train = model2.predict(X_train)
-
-    # predict class labels for the test set
-    predicted_test = model2.predict(X_test)
-    
-    # generate evaluation metrics
-    #print "Accuracy for training set using Logistic regression"
-    acc_train = metrics.accuracy_score(y_train, predicted_train)
-    #print acc_train
-
-    #print "Accuracy for test set using Logistic regression"
-    acc_test = metrics.accuracy_score(y_test, predicted_test)
-    #print acc_test
-
-    #validation for model
-    return model2, y_test, acc_train, acc_test
-    
 def feat_select(X,y):
     
     #feature selection using extermely randomized tree algorithm 
-    model = ExtraTreesClassifier(n_estimators=250, random_state=0)
+    model = ExtraTreesClassifier(n_estimators=300, random_state=0)
     model.fit(X, y)    
     #print X
     importances = model.feature_importances_
@@ -218,52 +184,35 @@ def feat_select(X,y):
 
 def RBF_SVM(X,y,count):
     
-    grid = GridSearch_CV(X,y,count)
-    C1 = grid.best_params_['C']
-    gamma1 = grid.best_params_['gamma']
-    svc = svm.SVC(kernel='rbf',C=C1, gamma=gamma1)
+    C_range = np.logspace(-2, 10, 13)
+    gamma_range = np.logspace(-9, 3, 13)
+    param_grid = dict(gamma=gamma_range, C=C_range)
+    #cross-validate time series data samples    
+    cv1 = TimeSeriesSplit(n_splits=2)    
+    grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv1)
     train = int(X.shape[0] * 0.8)
     test = train + 1
     X_train = X[:train,:]
     X_test = X[test:,:]
     y_train = y[:train]
     y_test = y[test:]
-    svc.fit(X_train, y_train)
-    # predict class labels for the training set
-    predicted_train = svc.predict(X_train)
-
-    # predict class labels for the test set
-    predicted_test = svc.predict(X_test)
-    
-    # generate evaluation metrics
-    #print "Accuracy for training set using RBF SVM"
-    acc_train = metrics.accuracy_score(y_train, predicted_train)
-    #print acc_train
-
-    #print "Accuracy for test set using RBF SVM"
-    acc_test = metrics.accuracy_score(y_test, predicted_test)
-    #print acc_test
-    #print svc.score
-    return svc,y_test, acc_train, acc_test  
-    
-def GridSearch_CV(X,y,count):
-    
-    C_range = np.logspace(-2, 10, 13)
-    gamma_range = np.logspace(-9, 3, 13)
-    param_grid = dict(gamma=gamma_range, C=C_range)
-    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
-    grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv)
-    train = int(X.shape[0] * 0.8)
-    #test = train + 1
-    X_train = X[:train,:]
-    #X_test = X[test:,:]
-    y_train = y[:train]
-    #y_test = y[test:]
     grid.fit(X_train, y_train)
     print count
     print("The best parameters are %s with a score of %0.2f"
       % (grid.best_params_, grid.best_score_))
-    return grid
+    
+    # predict class labels for the training set
+    predicted_train = grid.predict(X_train)
+
+    # predict class labels for the test set
+    predicted_test = grid.predict(X_test)
+    acc_train = metrics.accuracy_score(y_train, predicted_train)
+    print acc_train
+
+    #print "Accuracy for test set using RBF SVM"
+    acc_test = metrics.accuracy_score(y_test, predicted_test)
+    print acc_test
+    return grid,y_test, acc_train, acc_test
     
 def evaluate(stocks, start, end):
     finalList = []
@@ -303,6 +252,14 @@ def evaluate(stocks, start, end):
         #Build Y matrix
         sma3 = X_new[:,42]
         Y = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
+        Y1 = [1 if (sma3[x] - sma3[x+3])<-0.03
+               else 2 if ((sma3[x] - sma3[x+3])<-0.01 and (sma3[x] - sma3[x+3])>-0.03)
+               else 3 if ((sma3[x] - sma3[x+3])>-0.01 and (sma3[x] - sma3[x+3])<0.01)
+               else 4 if ((sma3[x] - sma3[x+3])>0.01 and (sma3[x] - sma3[x+3])<0.03)
+               else 5 for x in range(0,len(sma3)-3)]        
+        #Y1 = [(sma3[x] - sma3[x+3]) for x in range(0,len(sma3)-3)]
+        #plt.plot(Y1)
+        #Y = Y1
         #Y=Y+[1,1,1]
         #sma3SnP = X_new[:,32]
         #YSnP = [1 if (sma3SnP[x] - sma3SnP[x+3])<0 else -1 for x in range(0,len(sma3SnP)-3)]
@@ -313,9 +270,9 @@ def evaluate(stocks, start, end):
         #get Logistic regression   
         
         X, indices, values = feat_select(X_new,Y)
-        model2,y_test, train_acc, test_acc = RBF_SVM(X_new,Y,count)
+        #model2,y_test, train_acc, test_acc = RBF_SVM(X_new,Y,count)
         #apply LR for selected features
-        #model2,y_test, train_acc, test_acc = RBF_SVM(X,Y,count)
+        model2,y_test, train_acc, test_acc = RBF_SVM(X,Y,count)
         #print grid
         #model , train_acc , test_acc = RBF_SVM(X,Y)
         
@@ -358,7 +315,7 @@ def evaluate(stocks, start, end):
 #                     )
 #==============================================================================
 
-    return finalList, indicesList, ind_full, val_full, df, train_acc_full, test_acc_full       
+    return finalList, Y1, indicesList, ind_full, val_full, df, train_acc_full, test_acc_full       
     
 if __name__ == "__main__":
     
@@ -509,8 +466,8 @@ if __name__ == "__main__":
     transStock = ['CSX','AAL']
 
     #Total Stock List
-    stocks = capGoodsStock + consServNDStock + finStock + hCareStock + miscStock + pubUtilStock + techStock + transStock
-    #stocks = ['ROST']
+    #stocks = capGoodsStock + consServNDStock + finStock + hCareStock + miscStock + pubUtilStock + techStock + transStock
+    stocks = ['GOOGL']
     
     #Start and end Time
     start = datetime.date(2015,11,1)
@@ -518,7 +475,7 @@ if __name__ == "__main__":
     
 #    rawData2 = (web.DataReader(['^IXIC'], 'yahoo',start, end)).to_frame()    
 
-    finalList, indicesList, indices, values, df, train_acc_full, test_acc_full = evaluate(stocks, start, end)
+    finalList, Y, indicesList, indices, values, df, train_acc_full, test_acc_full = evaluate(stocks, start, end)
     
     with open('final.txt', 'w') as fp:
         for item in finalList:
