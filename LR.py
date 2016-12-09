@@ -56,7 +56,19 @@ class LogisticRegressionImp:
         #print indices
         #print values
         X = X[:,indices]
-        return X  
+        return X, indices
+    
+    def writeFeatAcc(self, dict_8, dict_16):
+        with open('SelectFeatAcc.csv', 'w') as csvfile:
+            fieldnames = ['Stocks', 'Selected Features', 'Train Accuracy', 'Test Accuracy']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+    
+            for item in dict_8:
+                writer.writerow({'Stocks': item['stock'], 'Selected Features': item['feat_list'], 'Train Accuracy': item['train_acc'], 'Test Accuracy': item['test_acc']})
+            
+            for item in dict_16:
+                writer.writerow({'Stocks': item['stock'], 'Selected Features': item['feat_list'], 'Train Accuracy': item['train_acc'], 'Test Accuracy': item['test_acc']})
 
     def evaluate(self, stocks, start , end):
         bp = PlotGraph()
@@ -112,8 +124,8 @@ class LogisticRegressionImp:
                 X_new_54 = X_new_54[:-3,:]    
     
     
-                X_select_8 = self.feat_select(X_new_27,Y_27)    
-                X_select_16 = self.feat_select(X_new_54,Y_54)
+                X_select_8, feat_8 = self.feat_select(X_new_27,Y_27)    
+                X_select_16, feat_16 = self.feat_select(X_new_54,Y_54)
                 
                        
                 #get Logistic regression
@@ -145,7 +157,8 @@ class LogisticRegressionImp:
     						'stock': stock,
     						'model': model_8,
     						'train_acc': train_acc_8,
-    						'test_acc': test_acc_8
+    						'test_acc': test_acc_8,
+                            'feat_list': feat_8
     					}
     				)
     	        stock_SnP_ER.append(
@@ -153,11 +166,12 @@ class LogisticRegressionImp:
     							'stock': stock,
     							'model': model_16,
     							'train_acc': train_acc_16,
-    							'test_acc': test_acc_16
+    							'test_acc': test_acc_16,
+                                 'feat_list': feat_16
     						}
         			)
                 
-        
+            self.writeFeatAcc(all_stock_ER, stock_SnP_ER)
             print stockCat
         
             # plotting stock for graph per category per algorithm
