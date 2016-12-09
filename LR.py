@@ -52,7 +52,7 @@ class LogisticRegressionImp:
         modelER.fit(X, y)    
         #print X
         importances = modelER.feature_importances_
-        indices = np.argsort(importances)[-16:]
+        indices = np.argsort(importances)[-16:] if X.shape[1]==54 else np.argsort(importances)[-8:]
         #print indices
         #print values
         X = X[:,indices]
