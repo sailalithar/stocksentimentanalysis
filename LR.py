@@ -97,11 +97,11 @@ class LogisticRegressionImp:
                 X_new_27 = X_27[39:,:]
                 X_new_54 = X_54[39:,:]
        
-    		#Build Y matrix
-                sma3 = X_new_27[:,21]
+    		    #Build Y matrix
+                sma3 = X_new_27[:,'sma3']
                 Y_27 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
-                sma3 = X_new_54[:,42]
+                sma3 = X_new_54[:,'sma3SnP']
                 Y_54 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
                 X_new_27 = X_new_27[:-3,:]
@@ -118,7 +118,7 @@ class LogisticRegressionImp:
     
                 model_8, y_test_8, train_acc_8, test_acc_8 = self.Logistic_reg(X_select_8,Y_27)
                 model_16, y_test_16, train_acc_16, test_acc_16 = self.Logistic_reg(X_select_16,Y_54)
-    			
+                
                 all_stock.append(
     					{
     						'stock': stock,
@@ -144,23 +144,30 @@ class LogisticRegressionImp:
     						'test_acc': test_acc_8
     					}
     				)
-    	    stock_SnP_ER.append(
+    	        stock_SnP_ER.append(
     						{
     							'stock': stock,
     							'model': model_16,
     							'train_acc': train_acc_16,
     							'test_acc': test_acc_16
     						}
-    					)
-        print stockCat
+        			)
+                
         
-        folderPath = stockCat+'/LR/AllStocks/'
-        bp.getBarPlot(stockCat, all_stock, col, 27, folderPath)
-        folderPath = stockCat+'/LR/StockSnP/'
-        bp.getBarPlot(stockCat, stock_SnP, col, 54, folderPath)
-        folderPath = stockCat+'/LR_ER/AllStocks/'        
-        bp.getBarPlot(stockCat, all_stock_ER, col, 8, folderPath)
-        folderPath = stockCat+'/LR_ER/StockSnP/'        
-        bp.getBarPlot(stockCat, stock_SnP_ER, col, 16, folderPath)
+            print stockCat
+        
+            # plotting stock for graph per category per algorithm
+            folderPath = stockCat+'/LR/AllStocks/'
+            bp.getBarPlot(stockCat, all_stock, col, 27, folderPath)
+            folderPath = stockCat+'/LR/StockSnP/'
+            bp.getBarPlot(stockCat, stock_SnP, col, 54, folderPath)
+            folderPath = stockCat+'/LR_ER/AllStocks/'        
+            bp.getBarPlot(stockCat, all_stock_ER, col, 8, folderPath)
+            folderPath = stockCat+'/LR_ER/StockSnP/'        
+            bp.getBarPlot(stockCat, stock_SnP_ER, col, 16, folderPath)
+            
+            # plotting graph for one category all algorithms
+            folderPath = stockCat
+            bp.getBarPlot(stockCat, all_stock, stock_SnP, all_stock_ER, stock_SnP_ER,folderPath)
             
         return all_stock, stock_SnP, all_stock_ER, stock_SnP_ER 

@@ -4,11 +4,15 @@ Created on Thu Dec 08 23:11:48 2016
 
 @author: Shruti
 """
-import matplotlib.pyplot as plt, numpy as np, os
+import os, pandas as pd, pandas.io.data as web, datetime, talib as tb, matplotlib.pyplot as plt, numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+from sklearn.ensemble import ExtraTreesClassifier
+
 
 class PlotGraph:
     
-    def getBarPlot(stockCat, finalList, col, numFeat, folderpath):
+    def getBarPlot(self,stockCat, finalList, col, numFeat, folderPath):
         
         my_xticks = [item['stock'] for item in finalList]
         x = np.array([i+1 for i in range(len(my_xticks))])    
