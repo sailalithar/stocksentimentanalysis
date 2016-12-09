@@ -4,7 +4,7 @@ Created on Thu Dec 08 10:17:19 2016
 
 """
 
-import pandas as pd, pandas.io.data as web, numpy as np, csv
+import pandas as pd, pandas.io.data as web, numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
@@ -57,21 +57,11 @@ class LogisticRegressionImp:
         X = X[:,indices]
         return X, indices
         
-    # writing accuracy and the relations between the selected features    
-    def writeFeatAcc(self, dict_16):
-        with open('Select Feature Accuracy LR.csv', 'w') as csvfile:
-            fieldnames = ['Stocks', 'Selected Features', 'Train Accuracy', 'Test Accuracy']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-   
-            for item in dict_16:
-                writer.writerow({'Stocks': item['stock'], 'Selected Features': item['feat_list'], 'Train Accuracy': item['train_acc'], 'Test Accuracy': item['test_acc']})
-    
-
     # driver for the the lr class            
     def evaluate(self, stocks, start , end):
         bp = PlotGraph()
         excelDF = [] 
+        excelFeature = []
         
         # for every catgeory in stocks
         for stockSet in stocks:
@@ -132,6 +122,7 @@ class LogisticRegressionImp:
                 model_8, y_test_8, train_acc_8, test_acc_8 = self.Logistic_reg(X_select_8,Y_27)
                 model_16, y_test_16, train_acc_16, test_acc_16 = self.Logistic_reg(X_select_16,Y_54)
                 
+                # 27 features
                 all_stock.append(
     					{
     						'stock': stock,
@@ -140,6 +131,7 @@ class LogisticRegressionImp:
     						'test_acc': test_acc_27
     					}
     				)
+                # 54 features
                 stock_SnP.append(
     					{
     						'stock': stock,
@@ -148,7 +140,7 @@ class LogisticRegressionImp:
     						'test_acc': test_acc_54
     					}
     				)
-          
+                  # 8 features
                 all_stock_ER.append(
     					{
     						'stock': stock,
@@ -157,18 +149,18 @@ class LogisticRegressionImp:
     						'test_acc': test_acc_8
     					}
     				)
+                # 16 features
     	        stock_SnP_ER.append(
     						{
     							'stock': stock,
     							'model': model_16,
     							'train_acc': train_acc_16,
-    							'test_acc': test_acc_16,
-                                        'feat_list': feat_16
+    							'test_acc': test_acc_16
     						}
         			)
                 excelDF.append({'Stock Category':stockCat,'Stock Name':stock,'LR 27 train':train_acc_27, 'LR 27 test':test_acc_27, 'LR 54 train':train_acc_54, 'LR 54 test':test_acc_54, 'LR 8 train':train_acc_8, 'LR 8 test':test_acc_8, 'LR 16 train':train_acc_16, 'LR 16 test':test_acc_16})
+                excelFeature.append({'Stock Category':stockCat,'Stock Name':stock,'Selected Features': feat_16, 'Train Accuracy': train_acc_16, 'Test Accuracy': test_acc_16})
             
-            self.writeFeatAcc(stock_SnP_ER)
             print stockCat
         
             # plotting stock for graph per category per algorithm
@@ -183,4 +175,4 @@ class LogisticRegressionImp:
 #            
 
 
-        return excelDF 
+        return excelDF, excelFeature 

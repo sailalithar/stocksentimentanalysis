@@ -59,21 +59,11 @@ class SupportVectorMachine:
         #print values
         X = X[:,indices]
         return X, indices
-        
-    # writing accuracy and the relations between the selected features    
-    def writeFeatAcc(self, dict_16):
-        with open('Select Feature Accuracy SVM.csv', 'w') as csvfile:
-            fieldnames = ['Stocks', 'Selected Features', 'Train Accuracy', 'Test Accuracy']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-   
-            for item in dict_16:
-                writer.writerow({'Stocks': item['stock'], 'Selected Features': item['feat_list'], 'Train Accuracy': item['train_acc'], 'Test Accuracy': item['test_acc']})    
-
-
+    
     def evaluate(self, stocks, start , end):
         bp = PlotGraph()
         excelDF = []
+        excelFeature = []
         count = 0
         # for every catgeory in stocks
         for stockSet in stocks:
@@ -170,8 +160,7 @@ class SupportVectorMachine:
         			)
                 # creating excel sheet for all stocks 
                 excelDF.append({'Stock Category':stockCat,'Stock Name':stock,'SVM 27 train':train_acc_27, 'SVM 27 test':test_acc_27, 'SVM 54 train':train_acc_54, 'SVM 54 test':test_acc_54, 'SVM 8 train':train_acc_8, 'SVM 8 test':test_acc_8, 'SVM 16 train':train_acc_16, 'SVM 16 test':test_acc_16})
-            
-            self.writeFeatAcc(stock_SnP_ER)
+                excelFeature.append({'Stock Category':stockCat,'Stock Name':stock,'Selected Features': feat_16, 'Train Accuracy': train_acc_16, 'Test Accuracy': test_acc_16})
             print stockCat
         
             # plotting stock for graph per category per algorithm
@@ -185,4 +174,4 @@ class SupportVectorMachine:
             bp.getBarPlot(stockCat, stock_SnP_ER, col, 16, folderPath)
             
             
-        return excelDF 
+        return excelDF, excelFeature 
