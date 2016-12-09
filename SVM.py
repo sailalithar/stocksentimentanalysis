@@ -22,7 +22,7 @@ class SupportVectorMachine:
 
     
     #Implement Support Vector Machine
-    def RBF_SVM(self,X,y,count):
+    def RBF_SVM(self,X,y,count,stock):
         C_range = np.logspace(-2, 10, 13)
         gamma_range = np.logspace(-9, 3, 13)
         param_grid = dict(gamma=gamma_range, C=C_range)
@@ -37,8 +37,8 @@ class SupportVectorMachine:
         y_test = y[test:]
         grid.fit(X_train, y_train)
         print count
-        print("The best parameters are %s with a score of %0.2f"
-          % (grid.best_params_, grid.best_score_))
+        print("The best parameters are %s with a score of %0.2f print for %d features of %s stock"
+          % (grid.best_params_, grid.best_score_, X_train.shape[1], stock))
         
         # predict class labels for the training set
         predicted_train = grid.predict(X_train)
@@ -47,7 +47,7 @@ class SupportVectorMachine:
         predicted_test = grid.predict(X_test)
         acc_train = metrics.accuracy_score(y_train, predicted_train)
         print acc_train
-    
+        
         #print "Accuracy for test set using RBF SVM"
         acc_test = metrics.accuracy_score(y_test, predicted_test)
         print acc_test
@@ -58,9 +58,11 @@ class SupportVectorMachine:
         #feature selection using extermely randomized tree algorithm 
         modelER = ExtraTreesClassifier(n_estimators=250, random_state=0)
         modelER.fit(X, y)    
-        #print X
+        #print X.shape[1]
         importances = modelER.feature_importances_
-        indices = np.argsort(importances)[-16:]
+        
+        #indices = np.argsort(importances)[-16:]
+        indices = np.argsort(importances)[-16:] if X.shape[1]==54 else np.argsort(importances)[-8:]
         #print indices
         #print values
         X = X[:,indices]
@@ -92,8 +94,12 @@ class SupportVectorMachine:
                 df_27, df_54 = CreateXMatrix().getX(rawData, rawDataSnP)
                 
                 # get index of sma columns
-                sma = df_27.columns.get_loc("sma3")
-                sma3SnP = df_54.columns.get_loc("sma3SnP")
+                #sma = df_27.columns.get_loc("sma3")
+                sma = 21                
+                print sma
+                #sma3SnP = df_54.columns.get_loc("sma3")
+                sma3SnP = 42                
+                print sma3SnP
     			
     			#convert dataframe to training matrix
                 X_27 = pd.DataFrame.as_matrix(df_27)
@@ -114,8 +120,8 @@ class SupportVectorMachine:
                 sma3 = X_new_27[:,sma]
                 Y_27 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
-                sma3 = X_new_54[:,sma3SnP]
-                Y_54 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
+                sma31 = X_new_54[:,sma3SnP]
+                Y_54 = [1 if (sma31[x] - sma31[x+3])<0 else -1 for x in range(0,len(sma31)-3)]
                 
                 X_new_27 = X_new_27[:-3,:]
                 X_new_54 = X_new_54[:-3,:]    
@@ -126,11 +132,11 @@ class SupportVectorMachine:
                 
                        
                 #get Logistic regression
-                model_27, y_test_27, train_acc_27, test_acc_27 = self.RBF_SVM(X_new_27,Y_27,count)
-                model_54, y_test_54, train_acc_54, test_acc_54 = self.RBF_SVM(X_new_54,Y_54,count)
+                model_27, y_test_27, train_acc_27, test_acc_27 = self.RBF_SVM(X_new_27,Y_27,count,stock)
+                model_54, y_test_54, train_acc_54, test_acc_54 = self.RBF_SVM(X_new_54,Y_54,count,stock)
     
-                model_8, y_test_8, train_acc_8, test_acc_8 = self.RBF_SVM(X_select_8,Y_27, count)
-                model_16, y_test_16, train_acc_16, test_acc_16 = self.RBF_SVM(X_select_16,Y_54, count)
+                model_8, y_test_8, train_acc_8, test_acc_8 = self.RBF_SVM(X_select_8,Y_27, count,stock)
+                model_16, y_test_16, train_acc_16, test_acc_16 = self.RBF_SVM(X_select_16,Y_54, count,stock)
                 
                 all_stock.append(
     					{
