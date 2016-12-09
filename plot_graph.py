@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 08 23:11:48 2016
-
-@author: Shruti
 """
-import os, pandas as pd, pandas.io.data as web, datetime, talib as tb, matplotlib.pyplot as plt, numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-from sklearn.ensemble import ExtraTreesClassifier
+import os, matplotlib.pyplot as plt, numpy as np
 
 
 class PlotGraph:
@@ -26,22 +20,23 @@ class PlotGraph:
         y_test = np.array([item['train_acc']*100 for item in finalList])
         plt.bar(x, y_test, align = 'center', color=col)
         plt.xticks(x, my_xticks, fontsize=fSize ,rotation='vertical')
-        plt.xlabel(stockCat + ' ('+ str(numFeat) + ' features) ')
+        plt.xlabel('Stocks')
         plt.ylabel("Train Accuracy (%)")
         fig = plt.gcf()
         plt.show()
         plt.draw()
         #Save graph plot in train_Result folder
         if not os.path.exists(folderPath):
-            os.makedirs(folderPath)        
-        fig.savefig(folderPath+'train.png', format='png', bbox_inches='tight', dpi=1000)
+            os.makedirs(folderPath)
+        fig.suptitle(stockCat + ' ('+ str(numFeat) + ' features) ', fontsize=14, fontweight='bold')
+        fig.savefig(folderPath+'Train.png', format='png', bbox_inches='tight', dpi=1000)
         
         
         #Train Accuracy
         y_test = np.array([item['test_acc']*100 for item in finalList])
         plt.bar(x, y_test, align = 'center', color=col)
         plt.xticks(x, my_xticks, fontsize=fSize ,rotation='vertical')
-        plt.xlabel(stockCat + ' ('+ str(numFeat) + ' features) ')
+        plt.xlabel('Stocks')
         plt.ylabel("Test Accuracy (%)")
         fig = plt.gcf()
         plt.show()
@@ -49,7 +44,8 @@ class PlotGraph:
         #Save graph plot in test_Result folder
         if not os.path.exists(folderPath):
             os.makedirs(folderPath)        
-        fig.savefig(folderPath+'test.png', format='png', bbox_inches='tight', dpi=1000)    
+        fig.suptitle(stockCat + ' ('+ str(numFeat) + ' features) ', fontsize=14, fontweight='bold')    
+        fig.savefig(folderPath+'Test.png', format='png', bbox_inches='tight', dpi=1000)    
 
-    #def getCategoryPlot()
+
         

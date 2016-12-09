@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 08 09:55:30 2016
-
-@author: Shruti
 """
 
-import os, pandas as pd, pandas.io.data as web, datetime, talib as tb, matplotlib.pyplot as plt, numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
-from sklearn.ensemble import ExtraTreesClassifier
+import pandas as pd, talib as tb, numpy as np
+
 
 class CreateXMatrix:
-    
-#    def __init__(self):
-#        self
     
     def getX(self, rawData, rawDataSnP):
     

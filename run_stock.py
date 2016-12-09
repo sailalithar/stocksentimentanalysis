@@ -27,7 +27,7 @@ if __name__ == "__main__":
     #call LR
     lr = LogisticRegressionImp()
     
-    print 'Evaluating Logisitc Regression'
+#    print 'Evaluating Logisitc Regression'
     df = lr.evaluate(stocks,start, end)
     df = pd.DataFrame(df,columns = ['Stock Category','Stock Name','LR 27 train', 'LR 27 test', 'LR 54 train', 'LR 54 test', 'LR 8 train', 'LR 8 test', 'LR 16 train', 'LR 16 test'] )
     df.to_excel('LR.xlsx', sheet_name='sheet1', index=False)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     svm = SupportVectorMachine()
     print 'Evaluating Support Vector Machine'
     df = svm.evaluate(stocks,start, end)
-    columns = ['Stock Category','Stock Name','SVM 27 train', 'SVM 27 test', 'SVM 54 train', 'SVM 54 test', 'SVM 8 train', 'SVM 8 test', 'SVM 16 train', 'SVM 16 test']
+    df = pd.DataFrame(df,columns = ['Stock Category','Stock Name','SVM 27 train', 'SVM 27 test', 'SVM 54 train', 'SVM 54 test', 'SVM 8 train', 'SVM 8 test', 'SVM 16 train', 'SVM 16 test'])
     df.to_excel('SVM.xlsx', sheet_name='sheet1', index=False)
 
     print 'done'

@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 08 10:17:19 2016
-
-@author: Shruti
 """
 import pandas as pd, pandas.io.data as web,  numpy as np, csv
-from sklearn.linear_model import LogisticRegression
-from sklearn.cross_validation import train_test_split
 from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.cross_validation import cross_val_score
 from sklearn import svm
 from sklearn.svm import SVC
 from sklearn.model_selection import TimeSeriesSplit
@@ -36,9 +30,9 @@ class SupportVectorMachine:
         y_train = y[:train]
         y_test = y[test:]
         grid.fit(X_train, y_train)
-        print count
-        print("The best parameters are %s with a score of %0.2f print for %d features of %s stock"
-          % (grid.best_params_, grid.best_score_, X_train.shape[1], stock))
+#        print count
+#        print("The best parameters are %s with a score of %0.2f print for %d features of %s stock"
+#          % (grid.best_params_, grid.best_score_, X_train.shape[1], stock))
         
         # predict class labels for the training set
         predicted_train = grid.predict(X_train)
@@ -46,11 +40,11 @@ class SupportVectorMachine:
         # predict class labels for the test set
         predicted_test = grid.predict(X_test)
         acc_train = metrics.accuracy_score(y_train, predicted_train)
-        print acc_train
+#        print acc_train
         
         #print "Accuracy for test set using RBF SVM"
         acc_test = metrics.accuracy_score(y_test, predicted_test)
-        print acc_test
+#        print acc_test
         return grid,y_test, acc_train, acc_test
 
     #Implement Tree Algorithm
@@ -175,7 +169,7 @@ class SupportVectorMachine:
     						}
         			)
                 # creating excel sheet for all stocks 
-                excelDF.append({'Stock Category':stockCat,'Stock Name':stock,'LR 27 train':train_acc_27, 'LR 27 test':test_acc_27, 'LR 54 train':train_acc_54, 'LR 54 test':test_acc_54, 'LR 8 train':train_acc_8, 'LR 8 test':test_acc_8, 'LR 16 train':train_acc_16, 'LR 16 test':test_acc_16})
+                excelDF.append({'Stock Category':stockCat,'Stock Name':stock,'SVM 27 train':train_acc_27, 'SVM 27 test':test_acc_27, 'SVM 54 train':train_acc_54, 'SVM 54 test':test_acc_54, 'SVM 8 train':train_acc_8, 'SVM 8 test':test_acc_8, 'SVM 16 train':train_acc_16, 'SVM 16 test':test_acc_16})
             
             self.writeFeatAcc(stock_SnP_ER)
             print stockCat

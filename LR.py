@@ -2,10 +2,9 @@
 """
 Created on Thu Dec 08 10:17:19 2016
 
-@author: Shruti
 """
 
-import pandas as pd, pandas.io.data as web, talib as tb, matplotlib.pyplot as plt, numpy as np, csv
+import pandas as pd, pandas.io.data as web, numpy as np, csv
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
