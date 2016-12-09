@@ -58,15 +58,12 @@ class LogisticRegressionImp:
         X = X[:,indices]
         return X, indices
     
-    def writeFeatAcc(self, dict_8, dict_16):
+    def writeFeatAcc(self, dict_16):
         with open('SelectFeatAcc.csv', 'w') as csvfile:
             fieldnames = ['Stocks', 'Selected Features', 'Train Accuracy', 'Test Accuracy']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-    
-            for item in dict_8:
-                writer.writerow({'Stocks': item['stock'], 'Selected Features': item['feat_list'], 'Train Accuracy': item['train_acc'], 'Test Accuracy': item['test_acc']})
-            
+   
             for item in dict_16:
                 writer.writerow({'Stocks': item['stock'], 'Selected Features': item['feat_list'], 'Train Accuracy': item['train_acc'], 'Test Accuracy': item['test_acc']})
 
@@ -171,7 +168,7 @@ class LogisticRegressionImp:
     						}
         			)
                 
-            self.writeFeatAcc(all_stock_ER, stock_SnP_ER)
+            self.writeFeatAcc(stock_SnP_ER)
             print stockCat
         
             # plotting stock for graph per category per algorithm
