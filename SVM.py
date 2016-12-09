@@ -14,6 +14,8 @@ from sklearn import svm
 from sklearn.svm import SVC
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.model_selection import GridSearchCV
+from plot_graph import PlotGraph
+from x_matrix import CreateXMatrix
 
 
 class SupportVectorMachine:

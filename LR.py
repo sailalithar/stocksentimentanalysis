@@ -81,6 +81,10 @@ class LogisticRegressionImp:
     		
     			#get X matrix
                 df_27, df_54 = CreateXMatrix().getX(rawData, rawDataSnP)
+                
+                # get index of sma columns
+                sma = df_27.columns.get_loc("sma3")
+                sma3SnP = df_54.columns.get_loc("sma3SnP")
     			
     			#convert dataframe to training matrix
                 X_27 = pd.DataFrame.as_matrix(df_27)
@@ -98,10 +102,10 @@ class LogisticRegressionImp:
                 X_new_54 = X_54[39:,:]
        
     		    #Build Y matrix
-                sma3 = X_new_27[:,'sma3']
+                sma3 = X_new_27[:,sma]
                 Y_27 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
-                sma3 = X_new_54[:,'sma3SnP']
+                sma3 = X_new_54[:,sma3SnP]
                 Y_54 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
                 X_new_27 = X_new_27[:-3,:]
@@ -167,7 +171,7 @@ class LogisticRegressionImp:
             bp.getBarPlot(stockCat, stock_SnP_ER, col, 16, folderPath)
             
             # plotting graph for one category all algorithms
-            folderPath = stockCat
-            bp.getBarPlot(stockCat, all_stock, stock_SnP, all_stock_ER, stock_SnP_ER,folderPath)
+#            folderPath = stockCat
+#            bp.getBarPlot(stockCat, all_stock, stock_SnP, all_stock_ER, stock_SnP_ER,folderPath)
             
         return all_stock, stock_SnP, all_stock_ER, stock_SnP_ER 

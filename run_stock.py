@@ -11,6 +11,7 @@ from sklearn import metrics
 from sklearn.ensemble import ExtraTreesClassifier
 from LR import LogisticRegressionImp
 from stock_list import StockList
+from SVM import SupportVectorMachine
 
 
 if __name__ == "__main__":
@@ -24,9 +25,13 @@ if __name__ == "__main__":
     stocks = stockList.createList()
     
     #call LR
-    lr = LogisticRegressionImp()
+#    lr = LogisticRegressionImp()
+#    
+#    all_stock, stock_SnP, all_stock_ER, stock_SnP_ER = lr.evaluate(stocks,start, end)
     
-    all_stock, stock_SnP, all_stock_ER, stock_SnP_ER = lr.evaluate(stocks,start, end)
+    svm = SupportVectorMachine()
+    all_stock, stock_SnP, all_stock_ER, stock_SnP_ER = svm.evaluate(stocks,start, end)
+    
     print 'done'
     
     

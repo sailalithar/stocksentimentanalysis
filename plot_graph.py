@@ -51,4 +51,5 @@ class PlotGraph:
             os.makedirs(folderPath)        
         fig.savefig(folderPath+'test.png', format='png', bbox_inches='tight', dpi=1000)    
 
+    #def getCategoryPlot()
         
