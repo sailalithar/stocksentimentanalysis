@@ -22,7 +22,7 @@ class SupportVectorMachine:
 
     
     #Implement Support Vector Machine
-    def RBF_SVM(X,y,count):
+    def RBF_SVM(self,X,y,count):
         C_range = np.logspace(-2, 10, 13)
         gamma_range = np.logspace(-9, 3, 13)
         param_grid = dict(gamma=gamma_range, C=C_range)
@@ -68,6 +68,7 @@ class SupportVectorMachine:
 
     def evaluate(self, stocks, start , end):
         bp = PlotGraph()
+        count = 0
         # for every catgeory in stocks
         for stockSet in stocks:
             
@@ -128,8 +129,8 @@ class SupportVectorMachine:
                 model_27, y_test_27, train_acc_27, test_acc_27 = self.RBF_SVM(X_new_27,Y_27,count)
                 model_54, y_test_54, train_acc_54, test_acc_54 = self.RBF_SVM(X_new_54,Y_54,count)
     
-                model_8, y_test_8, train_acc_8, test_acc_8 = self.Logistic_reg(X_select_8,Y_27)
-                model_16, y_test_16, train_acc_16, test_acc_16 = self.Logistic_reg(X_select_16,Y_54)
+                model_8, y_test_8, train_acc_8, test_acc_8 = self.RBF_SVM(X_select_8,Y_27, count)
+                model_16, y_test_16, train_acc_16, test_acc_16 = self.RBF_SVM(X_select_16,Y_54, count)
                 
                 all_stock.append(
     					{
