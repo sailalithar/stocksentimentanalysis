@@ -20,6 +20,7 @@ class PlotGraph:
         y_test = np.array([item['train_acc']*100 for item in finalList])
         plt.bar(x, y_test, align = 'center', color=col)
         plt.xticks(x, my_xticks, fontsize=fSize ,rotation='vertical')
+        plt.title(stockCat + ' ('+ str(numFeat) + ' features) ')
         plt.xlabel('Stocks')
         plt.ylabel("Train Accuracy (%)")
         fig = plt.gcf()
@@ -28,7 +29,6 @@ class PlotGraph:
         #Save graph plot in train_Result folder
         if not os.path.exists(folderPath):
             os.makedirs(folderPath)
-        fig.suptitle(stockCat + ' ('+ str(numFeat) + ' features) ', fontsize=14, fontweight='bold')
         fig.savefig(folderPath+'Train.png', format='png', bbox_inches='tight', dpi=1000)
         
         
@@ -36,6 +36,7 @@ class PlotGraph:
         y_test = np.array([item['test_acc']*100 for item in finalList])
         plt.bar(x, y_test, align = 'center', color=col)
         plt.xticks(x, my_xticks, fontsize=fSize ,rotation='vertical')
+        plt.title(stockCat + ' ('+ str(numFeat) + ' features) ')
         plt.xlabel('Stocks')
         plt.ylabel("Test Accuracy (%)")
         fig = plt.gcf()
@@ -44,7 +45,6 @@ class PlotGraph:
         #Save graph plot in test_Result folder
         if not os.path.exists(folderPath):
             os.makedirs(folderPath)        
-        fig.suptitle(stockCat + ' ('+ str(numFeat) + ' features) ', fontsize=14, fontweight='bold')    
         fig.savefig(folderPath+'Test.png', format='png', bbox_inches='tight', dpi=1000)    
 
 
