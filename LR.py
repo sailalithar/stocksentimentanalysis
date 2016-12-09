@@ -114,10 +114,10 @@ class LogisticRegressionImp:
                 X_new_54 = X_54[39:,:]
        
     		    #Build Y matrix
-                sma3 = X_new_27[:,sma]
+                sma3 = X_new_27[:,21]
                 Y_27 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
-                sma3 = X_new_54[:,sma3SnP]
+                sma3 = X_new_54[:,42]
                 Y_54 = [1 if (sma3[x] - sma3[x+3])<0 else -1 for x in range(0,len(sma3)-3)]
                 
                 X_new_27 = X_new_27[:-3,:]
